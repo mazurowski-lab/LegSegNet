@@ -2,10 +2,10 @@
 
 LegSegNet is a local Gradio app for lower-extremity CT tissue segmentation and body composition analysis. It uses a pretrained 2D nnU-Net model to segment four tissue compartments:
 
-- SAT: subcutaneous adipose tissue
-- SM: skeletal muscle
-- IAT: inter/intramuscular adipose tissue
-- Bone
+- **SAT**: subcutaneous adipose tissue
+- **SM**: skeletal muscle
+- **IAT**: inter/intramuscular adipose tissue
+- **Bone**
 
 LegSegNet is designed for a practical workflow: upload a CT slice or NIfTI volume, run segmentation locally, and export masks and quantitative tissue measurements.
 
@@ -72,8 +72,8 @@ Download following files and put them under `model` folder as follow:
 model/
 |-- plans.json
 |-- dataset.json
-`-- fold_0/
-    `-- checkpoint_best.pth
+|-- fold_0/
+    |-- checkpoint_best.pth
 ```
 
 If your model files are stored somewhere else, update `MODEL_FOLDER` in `inference.py`.
