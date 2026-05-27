@@ -32,7 +32,7 @@ python app.py
 
 The app automatically detects whether CUDA is available. With a GPU, it uses the full inference settings with mirroring and 0.5 tile overlap. On CPU, it disables mirroring and uses `tile_step_size=1.0`, which is faster but may slightly reduce accuracy.
 
-## Single Slice Inference
+## 2D Volume Inference
 
 Use the **Single Slice (PNG)** tab for one 2D CT slice.
 
