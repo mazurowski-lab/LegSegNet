@@ -13,13 +13,13 @@ LegSegNet is designed for a practical workflow: upload a CT slice or NIfTI volum
 
 The full LegSegNet workflow takes lower extremity CT scans as input, predicts tissue masks, and produces visual and quantitative outputs for downstream analysis.
 
-- [System overview PDF](assets/pipeline.pdf)
+- [System overview PDF](assets/pipeline.png)
 
 ## 3D Construction
 
 The 3D view shows volumetric reconstruction of LegSegNet predictions. The system overview summarizes how the app connects CT input, segmentation, visualization, and body composition measurements.
 
-- [3D segmentation view PDF](assets/3D_view.pdf)
+- [3D segmentation view PDF](assets/3D_view.png)
 
 ## Run
 
