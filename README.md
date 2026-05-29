@@ -1,6 +1,6 @@
 # LegSegNet
 
-LegSegNet is a Gradio app for lower extremity CT tissue segmentation and body composition analysis. 
+LegSegNet is a deep learning system for lower extremity CT tissue segmentation and body composition analysis. 
 
 It uses a pretrained nnUNet model to segment four tissue compartments:
 
