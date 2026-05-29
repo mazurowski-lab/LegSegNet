@@ -220,7 +220,7 @@ def device_banner_html():
 def build_ui():
     with gr.Blocks(title="LegSegNet") as demo:
         gr.Markdown(
-            "# LegSegNet\nSegment **SAT**, **SM**, **IAT**, and **Bone** from CT slices or volumes using a pre-trained nnU-Net 2D model."
+            "# LegSegNet\nSegment **SAT**, **SM**, **IAT**, and **Bone** from CT slices or volumes using a pretrained nnUNet model."
         )
 
         gr.HTML(device_banner_html())
@@ -228,7 +228,7 @@ def build_ui():
 
         with gr.Tab("Single Slice (PNG)"):
             gr.Markdown(
-                "Upload a CT slice PNG (HU-windowed to **[-200, 200]**, rescaled to **[0, 255] uint8**). "
+                "Upload a CT slice PNG (Clip HU to **[-200, 200]**, rescale to **[0, 255] uint8**). "
                 "Any resolution is accepted and will be resized to 256×256.")
             with gr.Row(equal_height=True):
                 with gr.Column(scale=1):
