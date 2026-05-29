@@ -47,7 +47,6 @@ def predict_png(img_slice):
     cv2.imwrite(str(mask_path), mask)
     return overlay, str(mask_path), summary
 
-
 def draw_marker_lines(img_slice, y_pos):
     out = img_slice.copy()
     line_color = (41, 128, 185)
@@ -61,13 +60,11 @@ def draw_marker_lines(img_slice, y_pos):
 
     return out
 
-
 def disp_to_z(y, state):
     z = int(round(y / state["z_to_y"]))
     if state["flipped"]:
         z = state["Z"] - 1 - z
     return max(0, min(state["Z"] - 1, z))
-
 
 def upload_nifti(file, state):
     state = {}
@@ -100,6 +97,11 @@ def upload_nifti(file, state):
     ## Return to match the Gradio pipeline
     return disp_rgb, [], info, "—", "—", state
 
+def reset_clicks(state):
+    if not state or state.get("side_disp_rgb") is None:
+        return None, [], "—", "—"
+    
+    return state["side_disp_rgb"].copy(), [], "—", "—"
 
 ## Clicks to draw line to select the range to predict
 def click_side(clicks, state, event: gr.SelectData):
@@ -117,14 +119,6 @@ def click_side(clicks, state, event: gr.SelectData):
     z_hi_text = str(zs[-1]) if len(zs) >= 2 else "—"
 
     return out, clicks, z_lo_text, z_hi_text
-
-
-def reset_clicks(state):
-    if not state or state.get("side_disp_rgb") is None:
-        return None, [], "—", "—"
-    
-    return state["side_disp_rgb"].copy(), [], "—", "—"
-
 
 def run_volume(clicks, state, progress=gr.Progress(track_tqdm=False)):
     if not state or state.get("vol_hu") is None:
@@ -223,7 +217,6 @@ def device_banner_html():
         </div>
         """
 
-
 def build_ui():
     with gr.Blocks(title="LegSegNet") as demo:
         gr.Markdown(
@@ -321,7 +314,6 @@ def build_ui():
             stop_btn.click(fn=None, cancels=[run_event])
             
     return demo
-
 
 if __name__ == "__main__":
     port = int(os.environ.get("GRADIO_SERVER_PORT", 7860))

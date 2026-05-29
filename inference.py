@@ -24,51 +24,6 @@ CLASS_COLOR_DICT = {
 ## Input your checkpoint folder here.
 MODEL_FOLDER = "   "
 
-def hu_to_uint8(img_slice):
-    x = np.clip(img_slice.astype(np.float32), HU_LO, HU_HI)
-    x = (x - HU_LO) / (HU_HI - HU_LO)
-    x = x * 255.0
-    return x.astype(np.uint8)
-
-
-def color_overlay(img, mask, alpha=0.55):
-    img_3c = np.stack([img] * 3, axis=-1).astype(np.float32)
-    img_overlay = img_3c.copy()
-    for c, rgb in CLASS_COLOR_DICT.items():
-        sel = (mask == c)
-        if sel.any():
-            img_overlay[sel] = (1 - alpha) * img_3c[sel] + alpha * np.array(rgb)
-    return img_overlay.clip(0, 255).astype(np.uint8)
-
-
-def _patch_plans_check(plans_path):
-    plans = json.loads(plans_path.read_text())
-    changed = False
-    for cfg in plans.get("configurations", {}).values():
-        sp = cfg.get("spacing")
-        if sp and any(s is None for s in sp):
-            cfg["spacing"] = [999.0 if s is None else s for s in sp]
-            changed = True
-    if changed:
-        plans_path.write_text(json.dumps(plans, indent=4))
-
-
-def load_nifti_volume(nifti_path):
-    img = nib.load(str(nifti_path))
-
-    vol = img.get_fdata().astype(np.float32)
-    codes = nib.aff2axcodes(img.affine)
-    z_axis = next(i for i, c in enumerate(codes) if c in ("S", "I"))
-    vol = np.moveaxis(vol, z_axis, 0).astype(np.float32)
-    sp = np.linalg.norm(img.affine[:3, :3], axis=0)
-    spacing = (
-        float(sp[z_axis]),
-        float(sp[(z_axis + 1) % 3]),
-        float(sp[(z_axis + 2) % 3]),
-    )
-    return vol, codes, spacing
-
-
 class LegCTSegmenter:
     def __init__(
             self, 
@@ -187,7 +142,47 @@ class LegCTSegmenter:
                 progress_cb((i + 1) / Z_sel, desc=f"Slice {i+1}/{Z_sel}")
     
         return imgs, masks, hus
+    
+def hu_to_uint8(img_slice):
+    x = np.clip(img_slice.astype(np.float32), HU_LO, HU_HI)
+    x = (x - HU_LO) / (HU_HI - HU_LO)
+    x = x * 255.0
+    return x.astype(np.uint8)
 
+def color_overlay(img, mask, alpha=0.55):
+    img_3c = np.stack([img] * 3, axis=-1).astype(np.float32)
+    img_overlay = img_3c.copy()
+    for c, rgb in CLASS_COLOR_DICT.items():
+        sel = (mask == c)
+        if sel.any():
+            img_overlay[sel] = (1 - alpha) * img_3c[sel] + alpha * np.array(rgb)
+    return img_overlay.clip(0, 255).astype(np.uint8)
+
+def _patch_plans_check(plans_path):
+    plans = json.loads(plans_path.read_text())
+    changed = False
+    for cfg in plans.get("configurations", {}).values():
+        sp = cfg.get("spacing")
+        if sp and any(s is None for s in sp):
+            cfg["spacing"] = [999.0 if s is None else s for s in sp]
+            changed = True
+    if changed:
+        plans_path.write_text(json.dumps(plans, indent=4))
+
+def load_nifti_volume(nifti_path):
+    img = nib.load(str(nifti_path))
+
+    vol = img.get_fdata().astype(np.float32)
+    codes = nib.aff2axcodes(img.affine)
+    z_axis = next(i for i, c in enumerate(codes) if c in ("S", "I"))
+    vol = np.moveaxis(vol, z_axis, 0).astype(np.float32)
+    sp = np.linalg.norm(img.affine[:3, :3], axis=0)
+    spacing = (
+        float(sp[z_axis]),
+        float(sp[(z_axis + 1) % 3]),
+        float(sp[(z_axis + 2) % 3]),
+    )
+    return vol, codes, spacing
 
 def compute_body_composition(masks, ct_hu, sx_mm, sy_mm, dz_mm):
     area_mm2 = sx_mm * sy_mm
@@ -211,7 +206,6 @@ def compute_body_composition(masks, ct_hu, sx_mm, sy_mm, dz_mm):
     out["mu_Fat"]    = (sum_per[1] + sum_per[3]) / n_fat if n_fat else float("nan")
 
     return out
-
 
 def make_side_view(raw_vol, projection="max"):
     ## Normalize raw image
