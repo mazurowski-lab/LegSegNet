@@ -2,7 +2,7 @@
 
 LegSegNet is a Gradio app for lower extremity CT tissue segmentation and body composition analysis. 
 
-It uses a pretrained 2D nnU-Net model to segment four tissue compartments:
+It uses a pretrained nnUNet model to segment four tissue compartments:
 
 - **SAT**: subcutaneous adipose tissue
 - **SM**: skeletal muscle
