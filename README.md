@@ -78,6 +78,15 @@ If your model files are stored somewhere else, update `MODEL_FOLDER` in `inferen
 
 If you find LegSegNet useful, please cite the manuscript:
 
+```
+@article{chen2026legsegnet,
+  title={LegSegNet: A Public Deep Learning System for Lower Extremity CT Tissue Segmentation and Quantification},
+  author={Chen, Yuwen and Chen, Yaqian and Colglazier, Roy and Dong, Haoyu and Gu, Hanxue and Mazurowski, Maciej A and Southerland, Kevin W},
+  journal={arXiv preprint arXiv:2605.30829},
+  year={2026}
+}
+```
+
 ## License
 
 This project is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License (CC BY-NC 4.0). See the [LICENSE](LICENSE) file for details.
